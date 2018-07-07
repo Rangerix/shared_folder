@@ -28,12 +28,12 @@ vector<int> findremove(string s1,int s,int e){
     str[s]='#';//flag
     str[e]='#';
 
-    string s1="";
+    string tempstr="";
     for(i=0;i<str.length();i++){
     	if(str[i]=='*') continue;
-    	s1+=str[i];
+    	tempstr+=str[i];
     }
-    str=s1;
+    str=tempstr;
     count=0;
     for(i=0;str[i]!='#';i++){
     	count++;
