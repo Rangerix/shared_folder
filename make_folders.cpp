@@ -25,8 +25,8 @@ vector<int> findremove(string s1,int s,int e){
     string str="";
     for(i=0;i<alpha.size();i++) 
     	str+=alpha[i][0];
-    str[s]='#';//flag
-    str[e]='#';
+    str[s-1]='#';//flag
+    str[e-1]='#';
 
     string tempstr="";
     for(i=0;i<str.length();i++){
@@ -223,11 +223,11 @@ int main(int argc,char* argv[])
 			for(i=0;i<stridevec.size();i++){
 				if(targetid==stridevec[i].id) break;
 			}
-			cout<<"here1"<<endl;
+			//cout<<"here1"<<endl;
 			for(j=0;j<stridevec.size();j++){
 				if(matchid==stridevec[j].id) break;
 			}
-			cout<<"here2"<<endl;
+			//cout<<"here2"<<endl;
 			if(i==stridevec.size()||j==stridevec.size()) continue;
 			string tpdbstring=stridevec[i].pdbseq;
 			string mpdbstring=stridevec[j].pdbseq;
@@ -235,11 +235,11 @@ int main(int argc,char* argv[])
 			vector<int> startendm=findremove(mpdbstring,matchstart,matchend);
 
 			string tpdbfile=makepdbfile(targetid,startendt[0],startendt[1]);
-			cout<<"here3"<<endl;
+			//cout<<"here3"<<endl;
 			string mpdbfile=makepdbfile(matchid,startendm[0],startendm[1]);
 
 			string foldername=targetid+"_"+matchid;
-			cout<<foldername<<endl;
+			//cout<<foldername<<endl;
 			system(("mkdir "+foldername).c_str());
 			system(("mv "+tpdbfile+" "+foldername+"/").c_str());
 			system(("mv "+mpdbfile+" "+foldername+"/").c_str());
