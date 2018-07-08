@@ -71,7 +71,7 @@ string makepdbfile(string pdbid,int s,int e){
 		pdbidch[i]=pdbid[i];
 	}
 	pdbidch[i++]='\0';
-	string filename="pdb";
+	string filename="../../pdb/pdb";													//pdb file path
 	string tempstr(pdbidch);
 	filename+=tempstr;
 	filename+=".ent";
@@ -139,7 +139,7 @@ string makepdbfile(string pdbid,int s,int e){
     filename="";
     filename=pdbid;
     filename+=".pdb";
-    cout<<filename<<endl;
+    //cout<<filename<<endl;
     ofs.open(filename.c_str());
     for(k=i;k<=j;k++){
     	ofs<<alpha[k]<<endl;
@@ -247,7 +247,7 @@ int main(int argc,char* argv[])
 			matchend=atoi(tempch);
 			i++;
 
-			cout<<targetid<<" "<<matchid<<endl;
+			//cout<<targetid<<" "<<matchid<<endl;
 			for(i=0;i<stridevec.size();i++){
 				if(targetid==stridevec[i].id) break;
 			}
@@ -267,7 +267,7 @@ int main(int argc,char* argv[])
 			string mpdbfile=makepdbfile(matchid,startendm[0],startendm[1]);
 
 			string foldername=targetid+"_"+matchid;
-			//cout<<foldername<<endl;
+			cout<<foldername<<endl;
 			system(("mkdir "+foldername).c_str());
 			system(("mv "+tpdbfile+" "+foldername+"/").c_str());
 			system(("mv "+mpdbfile+" "+foldername+"/").c_str());
