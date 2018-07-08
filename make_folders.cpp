@@ -3,9 +3,10 @@ using namespace std;
 
 struct stride {
 	string id,pdbseq;
+	int category;
 };
 
-vector<int> findremove(string s1,int s,int e){
+vector<int> findremove(string s1,int s,int e,int category){
 	int i,j,k,l;
     int count=0;
     vector<int> startend;
@@ -21,19 +22,34 @@ vector<int> findremove(string s1,int s,int e){
         i=l;
         alpha.push_back(temp);
     }
-
     string str="";
-    for(i=0;i<alpha.size();i++) 
-    	str+=alpha[i][0];
-    str[s-1]='#';//flag
-    str[e-1]='#';
+	if(category == 1 || category ==3||category==-1){
+	    str="";
+	    for(i=0;i<alpha.size();i++) 
+	    	str+=alpha[i][0];
+	    str[s-1]='#';//flag
+	    str[e-1]='#';
 
-    string tempstr="";
-    for(i=0;i<str.length();i++){
-    	if(str[i]=='*') continue;
-    	tempstr+=str[i];
-    }
-    str=tempstr;
+	    string tempstr="";
+	    for(i=0;i<str.length();i++){
+	    	if(str[i]=='*') continue;
+	    	tempstr+=str[i];
+	    }
+	    str=tempstr;
+	}
+	else if(category==2){
+		str="";
+	    for(i=0;i<alpha.size();i++) 
+	    	str+=alpha[i][0];
+	    string tempstr="";
+	    for(i=0;i<str.length();i++){
+	    	if(str[i]=='*') continue;
+	    	tempstr+=str[i];
+	    }
+	    str=tempstr;
+	    str[s-1]='#';//flag
+	    str[e-1]='#';
+	}
     count=0;
     for(i=0;str[i]!='#';i++){
     	count++;
@@ -55,7 +71,7 @@ string makepdbfile(string pdbid,int s,int e){
 		pdbidch[i]=pdbid[i];
 	}
 	pdbidch[i++]='\0';
-	string filename="../pdb/pdb";
+	string filename="pdb";
 	string tempstr(pdbidch);
 	filename+=tempstr;
 	filename+=".ent";
@@ -160,15 +176,27 @@ int main(int argc,char* argv[])
 			if(!ifs) break;
 			temp.pdbseq=str;
 		}
+		else if(str.length()>13&&str.substr(0,13)=="dist sequence"){
+			getline(ifs,str);
+			if(!ifs) break;
+			temp.pdbseq=str;
+		}
+		else if(str.length()>10&&str.substr(0,5)=="match"){
+			if(str[8]=='1')	temp.category=1;							//match : 1
+			else if(str[8]=='-'&&str[9]=='1') temp.category=-1;
+			else if(str[24]=='1') temp.category=2;						//match_blank : 1
+			else if(str[37]=='1') temp.category=3;						
+		}
 		else if(str==""){
 			stridevec.push_back(temp);
 			temp.id="";
 			temp.pdbseq="";
+			temp.category=0;
 		}
 	}
 	ifs.close();
 
-	cout<<"------------ all sequence details stored ---------------------------------\n";
+	cout<<"---------------------------- all sequence details stored ---------------------------------\n";
 
 	ifs.open(argv[2]);
 	string str1,str2,str3;
@@ -231,8 +259,8 @@ int main(int argc,char* argv[])
 			if(i==stridevec.size()||j==stridevec.size()) continue;
 			string tpdbstring=stridevec[i].pdbseq;
 			string mpdbstring=stridevec[j].pdbseq;
-			vector<int> startendt=findremove(tpdbstring,tarstart,tarend);
-			vector<int> startendm=findremove(mpdbstring,matchstart,matchend);
+			vector<int> startendt=findremove(tpdbstring,tarstart,tarend,stridevec[i].category);
+			vector<int> startendm=findremove(mpdbstring,matchstart,matchend,stridevec[j].category);
 
 			string tpdbfile=makepdbfile(targetid,startendt[0],startendt[1]);
 			//cout<<"here3"<<endl;
